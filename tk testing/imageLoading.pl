@@ -28,6 +28,7 @@ $mw->bind( "<r>"         => \&rotate_tank );
 
 #my $tank1 = $c->Label(-image => $image)->place('-x' => 20,
 #						   '-y' => 10);
+my $angle = 0;
 my $x;
 my $y;
 $x = 100; $y = 100;
@@ -41,34 +42,31 @@ sub exit_app {
 }
 
 sub rotate_tank {
-    my $total_time = 0;# time() + 180;
-    for ( my $time = 360; $time > $total_time; $time-- ) {
-       move_tank( $time , $x, $y );
+    my $total_angle = 0 + $angle; #when the tank is headed left the rotation will start from there
+    for ( my $cur_angle = 360 + $angle; $cur_angle > $total_angle; $cur_angle-- ) { #it is from 360 to 0 because this is the clockwise direction
+       move_tank( $cur_angle , $x, $y );
+       $angle = $cur_angle;
     }
-  }
-
-sub rotate {
-    my $angle = shift;
-    my $x = shift;
-    my $y = shift;
-
-    move_tank( $angle, $x, $y );
   }
 
 sub move_up {
 		move_tank( 0, $x, --$y );
+    $angle = 0;
 	}
 
 sub move_down {
 		move_tank( 180, $x, ++$y );
+    $angle = 180;
 	}
 	
 	sub move_right {
     move_tank( 270, ++$x, $y );
+    $angle = 270;
 	}
 	
 	sub move_left {
 		move_tank( 90, --$x, $y );
+    $angle = 90;
 	}
 	
 sub move_tank {
