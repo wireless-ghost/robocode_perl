@@ -10,29 +10,28 @@ use strict;
 $\ = "\n";
 
 my $mw = MainWindow->new;
-my $column = 0;
-
 
 my $image = $mw->Photo( -file => "tank.png" );
 
-my $c = $mw->Canvas( -width => 512, -height => 512, -background => 'black' ) -> pack;
+my $canvas = $mw->Canvas( -width => 512, -height => 512, -background => 'black' ) -> pack;
 
 $mw->protocol( 'WM_DELETE_WINDOW', \&exit_app );
 $mw->bind( "<q>"         => \&exit_app );
 $mw->bind( "<Control-c>" => \&exit_app );
-$mw->bind( "<w>"					=> \&move_up );
-$mw->bind( "<s>"					=> \&move_down );
-$mw->bind( "<d>"					=> \&move_right );
-$mw->bind( "<a>"					=> \&move_left );
+$mw->bind( "<w>"				 => \&move_up );
+$mw->bind( "<s>"				 => \&move_down );
+$mw->bind( "<d>"				 => \&move_right );
+$mw->bind( "<a>"				 => \&move_left );
 $mw->bind( "<r>"         => \&rotate_tank );
 
-#my $tank1 = $c->Label(-image => $image)->place('-x' => 20,
-#						   '-y' => 10);
 my $angle = 0;
 my $x;
 my $y;
+my $clockwise = 1; #one means clockwise, everything different from 1 - anticlockwise
+
 $x = 100; $y = 100;
-my $tank1 = $c->createImage( $x,$y,
+
+my $tank1 = $canvas->createImage( $x,$y,
 														-image => $image,
 														-tags => ['tank'] );
 														
@@ -42,8 +41,14 @@ sub exit_app {
 }
 
 sub rotate_tank {
-    my $total_angle = 0 + $angle; #when the tank is headed left the rotation will start from there
-    for ( my $cur_angle = 360 + $angle; $cur_angle > $total_angle; $cur_angle-- ) { #it is from 360 to 0 because this is the clockwise direction
+  #added new variable,so if the user change it while the function is being executed there won't be
+  #constant rotating of the tank
+  my $is_clockwise = $clockwise;
+  my $total_angle = ( $clockwise == 1 ? 0 : 360 ) + $angle; #when the tank is headed left the rotation will start from there
+
+  for ( my $cur_angle = ( $is_clockwise == 1 ? 360 : 0 ) + $angle; 
+                            $is_clockwise == 1 ? $cur_angle >= $total_angle : $cur_angle <= $total_angle; 
+                            $is_clockwise == 1 ? $cur_angle-- : $cur_angle++ ) { #it is from 360 to 0 because this is the clockwise direction
        move_tank( $cur_angle , $x, $y );
        $angle = $cur_angle;
     }
@@ -73,18 +78,22 @@ sub move_tank {
 				my $angle = shift;
         my $x = shift;
         my $y = shift;
-				$c->delete( 'all' );
-				my $new_image = $mw->Photo;
+				
+        $canvas->delete( 'all' );
+				
+        my $new_image = $mw->Photo;
 				$new_image->copy( $image );
-				print "$angle , $x , $y";
-        print 'date +%N';
+				
+        print "angle: $angle , x: $x , y: $y";
+        
         $new_image->rotate( $angle );
-				$c->createImage
+				$canvas->createImage
 		    ( $x,
 		      $y,
 		      -image => $new_image, 
 		      -tags => ['tank'] );
-        $c->update;
+        
+        $canvas->update;
 	}
 
 MainLoop;
