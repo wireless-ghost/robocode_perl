@@ -41,11 +41,9 @@ sub exit_app {
 }
 
 sub rotate_tank {
-    my $total_time = time() + 180;
-    my $last_time = time();
-    for ( my $time = time(); $time < $total_time; $time = time() ) {
-       rotate( ( $total_time - $time ) * 10, $x, $y );
-       $last_time = time();
+    my $total_time = 0;# time() + 180;
+    for ( my $time = 360; $time > $total_time; $time-- ) {
+       move_tank( $time , $x, $y );
     }
   }
 
@@ -81,7 +79,7 @@ sub move_tank {
 				my $new_image = $mw->Photo;
 				$new_image->copy( $image );
 				print "$angle , $x , $y";
-        print time();
+        print 'date +%N';
         $new_image->rotate( $angle );
 				$c->createImage
 		    ( $x,
