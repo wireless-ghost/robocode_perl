@@ -47,28 +47,30 @@ sub exit_app {
 }
 
 sub move_up {
-		move_tank('original');
+		move_tank('original', $x, --$y);
 	}
 
 sub move_down {
-		move_tank('flip');
+		move_tank('flip', $x, ++$y);
 	}
 	
 	sub move_right {
-		move_tank('r90');
+		move_tank('r90', ++$x, $y);
 	}
 	
 	sub move_left {
-		move_tank('l90');
+		move_tank('l90', --$x, $y);
 	}
 	
 sub move_tank {
 				my $direction = shift;
+        my $x = shift;
+        my $y = shift;
 				$c->delete('all');
 				my $new_image = $mw->Photo;
 				$new_image->copy($image);
 				print $direction;
-				$new_image->rotate_simple($direction) unless $direction != 'original';
+				$new_image->rotate_simple($direction) unless $direction eq 'original';
 				#$image->rotate_simple($direction);
 				$c->createImage
 		  (++$x,
