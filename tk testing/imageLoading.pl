@@ -2,7 +2,7 @@
 use Tk;
 use Tk::widgets qw/JPEG PNG/;
 use Tk::Compound;
-use Tk::PhotoRotateSimple;
+use Tk::PhotoRotate;
 use subs qw/rotate/;
 use strict;
 
@@ -28,6 +28,7 @@ $mw->bind("<w>"					=> \&move_up);
 $mw->bind("<s>"					=> \&move_down);
 $mw->bind("<d>"					=> \&move_right);
 $mw->bind("<a>"					=> \&move_left);
+$mw->bind("<r>"         => \&rotate_tank);
 
 #my $tank1 = $c->Label(-image => $image)->place('-x' => 20,
 #						   '-y' => 10);
@@ -46,20 +47,34 @@ sub exit_app {
     exit;
 }
 
+sub rotate_tank {
+    
+#    my $time = $start_time + 1;
+    my $total_time = time() + 30;
+    my $last_time = time();
+    for ( my $time = time(); $time < $total_time; $time = time() ) {
+      if ( $time - $last_time == 1){
+       move_tank($total_time - $time, $x, $y);
+       $last_time = time();
+      }
+    }
+  }
+
 sub move_up {
-		move_tank('original', $x, --$y);
+		move_tank(0, $x, --$y);
 	}
 
 sub move_down {
-		move_tank('flip', $x, ++$y);
+		move_tank(180, $x, ++$y);
 	}
 	
 	sub move_right {
-		move_tank('r90', ++$x, $y);
+#		move_tank('r90', ++$x, $y);
+    move_tank(270, ++$x, $y);
 	}
 	
 	sub move_left {
-		move_tank('l90', --$x, $y);
+		move_tank(90, --$x, $y);
 	}
 	
 sub move_tank {
@@ -70,7 +85,9 @@ sub move_tank {
 				my $new_image = $mw->Photo;
 				$new_image->copy($image);
 				print $direction;
-				$new_image->rotate_simple($direction) unless $direction eq 'original';
+        print time();
+#				$new_image->rotate_simple($direction) unless $direction eq 'original';
+        $new_image->rotate($direction);
 				#$image->rotate_simple($direction);
 				$c->createImage
 		  (++$x,
