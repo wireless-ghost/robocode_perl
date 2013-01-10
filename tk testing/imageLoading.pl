@@ -11,7 +11,8 @@ $\ = "\n";
 
 my $mw = MainWindow->new;
 
-my $image = $mw->Photo( -file => "tank.png" );
+my $tank1_image = $mw->Photo( -file => "tank.png" );
+my $shot_image  = $mw->Photo( -file => "shot.png" );
 
 my $canvas = $mw->Canvas( -width => 512, -height => 512, -background => 'black' ) -> pack;
 
@@ -23,6 +24,7 @@ $mw->bind( "<s>"				 => \&move_down );
 $mw->bind( "<d>"				 => \&move_right );
 $mw->bind( "<a>"				 => \&move_left );
 $mw->bind( "<r>"         => \&rotate_tank );
+$mw->bind( "<f>"         => \&shoot_up );
 
 my $angle = 0;
 my $x;
@@ -31,9 +33,13 @@ my $clockwise = 1; #one means clockwise, everything different from 1 - anticlock
 
 $x = 100; $y = 100;
 
-my $tank1 = $canvas->createImage( $x,$y,
-														-image => $image,
-														-tags => ['tank'] );
+$canvas->createImage( $x,$y,
+														-image => $tank1_image,
+														-tags => ['tank1'] );
+$canvas->createImage( $x,
+                      $y + 1,
+                      -image => $shot_image,
+                      -tags => ['shot'] );
 														
 sub exit_app {
     $mw->destroy;
@@ -79,10 +85,10 @@ sub move_tank {
         my $x = shift;
         my $y = shift;
 				
-        $canvas->delete( 'all' );
+        $canvas->delete( 'tank1' );
 				
         my $new_image = $mw->Photo;
-				$new_image->copy( $image );
+				$new_image->copy( $tank1_image );
 				
         print "angle: $angle , x: $x , y: $y";
         
@@ -91,9 +97,43 @@ sub move_tank {
 		    ( $x,
 		      $y,
 		      -image => $new_image, 
-		      -tags => ['tank'] );
+		      -tags => ['tank1'] );
         
         $canvas->update;
 	}
+
+sub shoot_up{
+    print "Started Shooting...";
+    print $y;
+    for ( my $i = $y; $i > 0; $i-- ){
+      shoot( $x, $i );
+    }
+    print "Tank stopped shooting...";
+  }
+
+sub shoot {
+    print $x;
+    my $x = shift;
+    my $y = shift;
+
+    $canvas->delete( 'shot' );
+
+    print $x, $y;
+
+    my $new_shot = $mw->Photo;
+    $new_shot->copy( $shot_image );
+ 
+    $new_shot->rotate( 0 );
+    
+    $canvas->createImage
+    (
+      $x, 
+      $y, 
+      -image => $new_shot,
+      -tags => [ 'shot' ]
+    );
+
+    $canvas->update;
+  }
 
 MainLoop;
