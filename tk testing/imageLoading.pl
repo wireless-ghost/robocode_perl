@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl -w
+#!/usr/local/bin/perl
 
 use Time::HiRes;
 use Tk;
@@ -10,38 +10,17 @@ use strict;
 
 $\ = "\n";
 
-my $mw = MainWindow->new;
+    my $mw;
 
-my $tank1_image = $mw->Photo( -file => "tank.png" );
-my $shot_image  = $mw->Photo( -file => "shot.png" );
+    my $tank1_image;
+    my $shot_image;
 
-my $canvas = $mw->Canvas( -width => 512, -height => 512, -background => 'black' ) -> pack;
-
-$mw->protocol( 'WM_DELETE_WINDOW', \&exit_app );
-$mw->bind( "<q>"         => \&exit_app );
-$mw->bind( "<Control-c>" => \&exit_app );
-$mw->bind( "<w>"				 => \&move_up );
-$mw->bind( "<s>"				 => \&move_down );
-$mw->bind( "<d>"				 => \&move_right );
-$mw->bind( "<a>"				 => \&move_left );
-$mw->bind( "<r>"         => \&rotate_tank );
-$mw->bind( "<f>"         => \&shoot_up );
-
-my $kp = 0; #key pressed
-my $angle = 0;
-my $x;
-my $y;
-my $clockwise = 1; #one means clockwise, everything different from 1 - anticlockwise
-
-$x = 100; $y = 100;
-
-$canvas->createImage( $x,$y,
--image => $tank1_image,
--tags => ['tank1'] );
-$canvas->createImage( $x,
-                      $y + 1,
-                      -image => $shot_image,
-                      -tags => ['shot'] );
+    my $canvas;
+    my $kp;
+    my $angle;
+    my $x;
+    my $y;
+    my $clockwise;
 
 sub exit_app {
     $mw->destroy;
@@ -53,7 +32,7 @@ sub rotate_tank {
   #constant rotating of the tank
   my $is_clockwise = $clockwise;
  
-  print "in rotate tank... angle is $angle";
+  print "in rotate_tank... angle is $angle";
 
   #here we need to justify the angle if it is greater than 360
   if ( $angle > 360 )
@@ -75,95 +54,71 @@ sub rotate_tank {
        move_tank( $cur_angle , $x, $y );
        $angle = $cur_angle;
     }
-    #  move_tank ($angle, $x, $y);
   }
 
 sub move_up {
-#		move_tank( 0, $x, --$y );
-  #   $angle = 0;
+		move_tank( 0, $x, --$y );
+    $angle = 0;
     $kp = 1;
 	}
 
 sub move_down {
-#		move_tank( 180, $x, ++$y );
-#    $angle = 180;
+		move_tank( 180, $x, ++$y );
+    $angle = 180;
     $kp = 1;
 	}
 	
 	sub move_right {
-    #move_tank( 270, ++$x, $y );
-    #$angle = 270;
+    move_tank( 270, ++$x, $y );
+    $angle = 270;
     $kp = 1;
 	}
 	
 	sub move_left {
-    #move_tank( 90, --$x, $y );
-    #$angle = 90;
+    move_tank( 90, --$x, $y );
+    $angle = 90;
     $kp = 1;
 	}
 	
   sub move_forward {
-    #my $x = shift;
-    #my $y = shift;
 
     print "moving forward!!!";
     print "old x: $x, old y: $y, angle: $angle";
 
     $kp = 0;
 
-    if ( $angle == 360 or $angle == 0)
-    {
+    if ( $angle == 360 or $angle == 0) {
       $y += 1;
     }
-    elsif ( $angle == 270 )
-    {
+    elsif ( $angle == 270 ) {
       $x += 1;
     }
-    elsif ( $angle == 180 )
-    {
+    elsif ( $angle == 180 ) {
       $y -= 1;
     }
-    elsif ( $angle == 90 )
-    {
+    elsif ( $angle == 90 ) {
       $x -= 1;
     }
-    elsif ( $angle >= 271 && $angle <= 359 ) #first quadrant
-    {
+    elsif ( $angle >= 271 && $angle <= 359 ) {#first quadrant
       $x += 1;
       $y += 1;
     }
-    elsif ( $angle >= 181 && $angle <= 269 ) #second quadrant
-    {
+    elsif ( $angle >= 181 && $angle <= 269 ) { #second quadrant
       $x += 1;
       $y -= 1;
     }
-    elsif ( $angle >= 91 && $angle <= 179 ) #third quadrant
-    {
+    elsif ( $angle >= 91 && $angle <= 179 ) { #third quadrant
       $x -= 1;
       $y -= 1;
     }
-    elsif ( $angle >= 1 && $angle <= 89 ) #forth quadrant
-    {
+    elsif ( $angle >= 1 && $angle <= 89 ) { #forth quadrant
       $x -= 1;
       $y += 1;
     }
 
-    $canvas->delete( 'tank1' );
-				
-    my $new_image = $mw->Photo;
-    $new_image->copy( $tank1_image );
-	
-    $new_image->rotate( $angle );
-		
-    $canvas->createImage
-		 ( $x,
-		   $y,
-		   -image => $new_image, 
-		   -tags => ['tank1'] );
+    draw_tank( $angle, $x, $y);
 
-     $canvas->update;
-  
-     print "old x: $x, old y: $y, angle: $angle";
+    print "new x: $x, new y: $y, angle: $angle";
   }
 
 sub move_tank {
@@ -188,17 +143,57 @@ sub move_tank {
         $canvas->update;
 	}
 
+sub draw_tank {
+    $canvas->delete( 'tank1' );
+
+    my $my_angle = shift;
+    my $my_x = shift;
+    my $my_y = shift;
+				
+    $canvas->delete( 'tank1' );
+				
+    my $new_image = $mw->Photo;
+		$new_image->copy( $tank1_image );
+		
+    print "angle: $my_angle , x: $my_x , y: $my_y";
+      
+    $new_image->rotate( $my_angle );
+		
+    $canvas->createImage
+		( $my_x,
+		  $my_y,
+		  -image => $new_image, 
+		  -tags => ['tank1'] );
+
+    $canvas->update;
+  }
+
+sub turnLeft {
+    my $turning_angle = shift;
+
+    $angle += $turning_angle;
+
+    draw_tank( $angle, $x, $y);
+  }
+
+sub turnRight {
+    my $turning_angle = shift;
+
+    $angle -= $turning_angle;
+
+    draw_tank( $angle, $x, $y );
+  }
+
 sub shoot_up{
     print "Started Shooting...";
     print $y;
-    for ( my $i = $y; $i > 0; $i-- ){
-      shoot( $x, $i );
+    for ( my $i = $y; $i > 0; $i-- ) {
+      draw_shot( $x, $i );
     }
     print "Tank stopped shooting...";
   }
 
-sub shoot {
-    print $x;
+sub draw_shot {
     my $x = shift;
     my $y = shift;
 
@@ -217,14 +212,42 @@ sub shoot {
       -tags => [ 'shot' ]
     );
 
-    #print $new_shot->data(-from);
-
-    #Time::HiRes::sleep(1);
-
     $canvas->update;
-    #$mw->update;
-
-    #Time::HiRes::sleep(1);
   }
 
-MainLoop;
+MAIN: {
+    $mw = MainWindow->new;
+
+    $tank1_image = $mw->Photo( -file => "tank.png" );
+    $shot_image  = $mw->Photo( -file => "shot.png" );
+
+    $canvas = $mw->Canvas( -width => 512, -height => 512, -background => 'black' ) -> pack;
+
+    $mw->protocol( 'WM_DELETE_WINDOW', \&exit_app );
+    $mw->bind( "<q>"         => \&exit_app );
+    $mw->bind( "<Control-c>" => \&exit_app );
+    $mw->bind( "<w>"				 => \&move_up );
+    $mw->bind( "<s>"				 => \&move_down );
+    $mw->bind( "<d>"				 => \&move_right );
+    $mw->bind( "<a>"				 => \&move_left );
+    $mw->bind( "<r>"         => \&rotate_tank );
+    $mw->bind( "<f>"         => \&shoot_up );
+
+    $kp = 0; #key pressed
+    $angle = 0;
+    $x;
+    $y;
+    $clockwise = 1; #one means clockwise, everything different from 1 - anticlockwise
+
+    $x = 100; $y = 100;
+
+    $canvas->createImage( $x,$y,
+    -image => $tank1_image,
+    -tags => ['tank1'] );
+    $canvas->createImage( $x,
+                          $y + 1,
+                          -image => $shot_image,
+                          -tags => ['shot'] );
+    
+    MainLoop;
+ }
