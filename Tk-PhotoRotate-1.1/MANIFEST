@@ -1,0 +1,8 @@
+MANIFEST
+Makefile.PL
+Tk/PhotoRotate.pm
+Tk/PhotoRotateSimple.pm
+README
+Icon.gif
+test.pl
+rotate.pl

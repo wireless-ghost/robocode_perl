@@ -1,0 +1,24 @@
+
+DESCRIPTION
+       Tk::PhotoRotate is a Photo method that rotates an image by
+       an arbitrary amount.  If 90, 180 or 270 degrees, then
+       Tk::PhotoRotateSimple is used.
+
+       Zero degrees is "north", 90 degrees is "west", 180 degrees
+       is "south",  and 270 degrees is "east".
+
+       Translated verbatim from Richard Suchenwirth's version on
+       the Tcl-ers' Wiki.  With assistance from George Staplin
+       and Donal Fellows.
+
+INSTALLATION
+	perl Makefile.PL
+	make
+	make test
+	make install
+
+	Sample program rotate is runnable after the make test phase.
+
+Steve Lidie
+2003/07/20
+sol0@lehigh.edu
