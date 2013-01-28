@@ -218,8 +218,8 @@ sub draw_shot {
 MAIN: {
     $mw = MainWindow->new;
 
-    $tank1_image = $mw->Photo( -file => "tank.png" );
-    $shot_image  = $mw->Photo( -file => "shot.png" );
+    $tank1_image = $mw->Photo( -file => "images/tank.png" );
+    $shot_image  = $mw->Photo( -file => "images/shot.png" );
 
     $canvas = $mw->Canvas( -width => 512, -height => 512, -background => 'black' ) -> pack;
 
