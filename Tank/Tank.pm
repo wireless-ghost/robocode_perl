@@ -60,28 +60,32 @@ sub move_forward {
 	if ( $self->{_angle} == 360 or $self->{_angle} == 0) {
 		$self->{_my} -= 1;
 	}
-	elsif ( $self->{_angle} == 270 ) {
+	elsif ( $self->{_angle} == 270 or $self->{_angle} == -90 ) {
 		$self->{_x} += 1;
 	}
-	elsif ( $self->{_angle} == 180 ) {
+	elsif ( $self->{_angle} == 180 or $self->{_angle} == -180 ) {
 		$self->{_my} += 1;
 	}
-	elsif ( $self->{_angle} == 90 ) {
+	elsif ( $self->{_angle} == 90 or $self->{_angle} == -270) {
 		$self->{_x} -= 1;
 	}
-	elsif ( $self->{_angle} >= 271 && $self->{_angle} <= 359 ) {#first quadrant
+	elsif ( ( $self->{_angle} >= 271 && $self->{_angle} <= 359)
+		|| ($self->{_angle} >= -179 && $self->{_angle} <= -91  ) ) {#first quadrant
 		$self->{_x} += 1;
 		$self->{_my} += 1;
 	}
-	elsif ( $self->{_angle} >= 181 && $self->{_angle} <= 269 ) { #second quadrant
+	elsif ( ( $self->{_angle} >= 181 && $self->{_angle} <= 269)
+		|| ( $self->{_angle} >= -89 && $self->{_angle} <= -1 ) ) { #second quadrant
 		$self->{_x} += 1;
 		$self->{_my} -= 1;
 	}
-	elsif ( $self->{_angle} >= 91 && $self->{_angle} <= 179 ) { #third quadrant
+	elsif ( ( $self->{_angle} >= 91 && $self->{_angle} <= 179 )
+		|| ( $self->{_angle} => -359 && $self->{_angle} <= -271 ) ) { #third quadrant
 		$self->{_x} -= 1;
 		$self->{_my} -= 1;
 	}
-	elsif ( $self->{_angle} >= 1 && $self->{_angle} <= 89 ) { #forth quadrant
+	elsif ( ( $self->{_angle} >= 1 && $self->{_angle} <= 89 ) 
+		|| ( $self->{_anlge} >= -269 && $self->{_angle} <= -181 )) { #forth quadrant
 		$self->{_x} -= 1;
 		$self->{_my} += 1;
 	}

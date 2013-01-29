@@ -49,8 +49,37 @@ sub move_left {
 	$kp = 1;
 }
 
+sub scan {
+
+	print $tank1->getAngle();
+		
+	if ( $tank1->getAngle() > 360 ){
+		my $k = $tank1->getAngle() / 360;
+		$tank1->getAngle() = $tank1->getAngle() - ( $k * 360);
+	}
+
+	print $tank1->getAngle();
+
+	$kp = 0;
+	
+	my $total_angle = 0 + $tank1->getAngle();
+	for ( my $cur_angle = 360 + $tank1->getAngle(); 
+			$cur_angle >= $total_angle; 
+			$cur_angle--) {
+		if ( $kp == 1 )
+		{
+			move_forward();
+			last;
+		}
+		$tank1->turnRight( 1  );
+		move_tank( $tank1->getAngle() , $tank1->getX(), $tank1->getY() );
+	}
+
+}
+
 sub move_forward {
 	print "moving forward!!!";
+	$kp = 1;
 	$tank1->move_forward();
 	draw_tank( $tank1->getAngle(), $tank1->getX(), $tank1->getY());
 }
@@ -153,23 +182,22 @@ MAIN: {
 	      $canvas = $mw->Canvas( -width => 512, -height => 512, -background => 'black' ) -> pack;
 
 	      $mw->protocol( 'WM_DELETE_WINDOW', \&exit_app );
-	      $mw->bind( "<q>"         => \&exit_app );
-	      $mw->bind( "<Control-c>" => \&exit_app );
-	      $mw->bind( "<w>"				 => \&move_up );
-	      $mw->bind( "<s>"				 => \&move_down );
-	      $mw->bind( "<d>"				 => \&move_right );
-	      $mw->bind( "<a>"				 => \&move_left );
-#$mw->bind( "<r>"         => \&rotate_tank );
-	      $mw->bind( "<c>"				 => \&move_forward);
-	      $mw->bind( "<f>"         => \&shoot_up );
+	      $mw->bind( "<q>"         			=> \&exit_app );
+	      $mw->bind( "<Control-c>" 			=> \&exit_app );
+	      $mw->bind( "<w>"				=> \&move_up );
+	      $mw->bind( "<s>"				=> \&move_down );
+	      $mw->bind( "<d>"				=> \&move_right );
+	      $mw->bind( "<a>"				=> \&move_left );
+	      $mw->bind( "<r>"         			=> \&scan );
+	      $mw->bind( "<c>"				=> \&move_forward);
+	      $mw->bind( "<f>"         			=> \&shoot_up );
 
 	      $kp = 0; #key pressed
 
-#    $clockwise = 1; #one means clockwise, everything different from 1 - anticlockwise
-
-		      $canvas->createImage( $tank1->getX(),$tank1->getY(),
+	      $canvas->createImage( $tank1->getX(),$tank1->getY(),
 				      -image => $tank1_image,
 				      -tags => ['tank1'] );
+	      
 	      $canvas->createImage( $tank1->getX(),
 			      $tank1->getY() + 1,
 			      -image => $shot_image,
