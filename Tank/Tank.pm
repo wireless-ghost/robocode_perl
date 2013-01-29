@@ -4,28 +4,52 @@ package Tank;
 
 $\ = "\n";
 
+sub checkPower {
+	my ($self) = @_;
+	if ($self->{_power} <= 0){
+		return 0;
+	}
+	return 1;
+}
+
 sub move_up {
 	my ($self) = @_;
+	if ($self->checkPower() != 1){
+		return 0;
+	}
 	$self->{_my}--;
 	$self->{_angle} = 0;
+	$self->{_power}--;
 }
 
 sub move_down {
 	my ($self) = @_;
+	if ($self->checkPower() != 1){
+		return 0;
+	}
 	$self->{_my} = $self->{_my} + 1;
 	$self->{_angle} = 180;
+	$self->{_power}--;
 }
 
 sub move_right {
 	my ($self) = @_;
+	if ($self->checkPower() != 1){
+		return 0;
+	}
 	$self->{_x} += 1;
 	$self->{_angle} = 270;
+	$self->{_power}--;
 }
 
 sub move_left {
 	my ($self) = @_;
+	if ($self->checkPower() != 1){
+		return 0;
+	}
 	$self->{_x}--;
 	$self->{_angle} = 90;
+	$self->{_power}--;
 }
 
 sub move_forward {
@@ -61,6 +85,8 @@ sub move_forward {
 		$self->{_x} -= 1;
 		$self->{_my} += 1;
 	}
+
+	$self->{_power}--;
 }
 
 sub turnLeft {
@@ -76,6 +102,10 @@ sub turnRight {
 }
 
 sub shoot_up{
+	my ($self) = @_;
+	if ($self->{_power} <= 0){
+		return 0;
+	}
 	print "Started Shooting...";
 #print $self->{_my};
 #    for ( my $i = $self->{_my}; $i > 0; $i-- ) {
@@ -99,13 +129,31 @@ sub getAngle{
 	return $self->{_angle};		
 }
 
+sub getPower{
+	my ($self) = @_;
+	return $self->{_power};
+}
+
+sub getShotPower{
+	my ($self) = @_;
+	return $self->{_shotPower};
+}
+
+sub setShotPower{
+	my ($self, $shotPower) = @_;
+	$self->{_shotPower} = $shotPower if defined($shotPower);
+	return $self->{_shotPower};
+}
+
 sub new
 {
 	my $class = shift;
 	my $self = {
 		_x => 100,
 		_angle => 0,
-		_my => 100
+		_my => 100,
+		_power => 100,
+		_shotPower => 1
 	};
 	bless $self, $class;
 	return $self;
