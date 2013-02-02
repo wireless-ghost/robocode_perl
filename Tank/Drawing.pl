@@ -107,13 +107,12 @@ sub move_tank {
 }
 
 sub draw_tank {
-	$canvas->delete( 'tank1' );
-
 	my $my_angle = shift;
 	my $my_x = shift;
 	my $my_y = shift;
 
 	$canvas->delete( 'tank1' );
+	$canvas->delete( 'line' );
 
 	my $new_image = $mw->Photo;
 	$new_image->copy( $tank1_image );
@@ -127,6 +126,8 @@ sub draw_tank {
 		  $my_y,
 		  -image => $new_image, 
 		  -tags => ['tank1'] );
+
+	$canvas->createLine($my_x, $my_y, $my_x, 0, -tags=>[ 'line' ], -fill=> blue);  
 
 	$canvas->update;
 }
@@ -173,7 +174,7 @@ sub draw_shot {
 }
 
 MAIN: {
-	      $tank1 = new Tank();
+	      $tank1 = new Tank( "Millenium Falcon" );
 	      $mw = MainWindow->new;
 
 	      $tank1_image = $mw->Photo( -file => "images/tank.png" );

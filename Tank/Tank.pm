@@ -1,4 +1,5 @@
 #!/usr/local/bin/perl -w
+use Math::Trig;
 
 package Tank;
 
@@ -14,7 +15,7 @@ sub checkPower {
 
 sub move_up {
 	my ($self) = @_;
-	if ($self->checkPower() != 1){
+	if ($self->checkPower() != 1 || $self->{_my} <= 0 ){
 		return 0;
 	}
 	$self->{_my}--;
@@ -53,9 +54,14 @@ sub move_left {
 }
 
 sub move_forward {
-	my ($self) = @_;
-	print "moving forward!!!";
-#    print "old x: $self->{_x}, old y: $self->{_my}, angle: $self->{_angle}";
+	my ( $self ) = @_;
+	print "$self->{_name} is moving forward...";
+
+	if ( $self->{_my} >= 488 || $self->{_my} <= 24 #bottom/ top of the screen
+		|| $self->{_x} <= 24 || $self->{_x} >= 488 #left/ right of the screen
+		|| $self->{_power} <= 0 ) {
+		return 0;	
+	}
 
 	if ( $self->{_angle} == 360 or $self->{_angle} == 0) {
 		$self->{_my} -= 1;
@@ -93,6 +99,11 @@ sub move_forward {
 	$self->{_power}--;
 }
 
+sub checkForEnemy {
+#	my ( $self, $enemyX, $enemyY ) = @_;
+#	if ( tan ( ( )
+}
+
 sub turnLeft {
 	my ($self, $turning_angle) = @_;
 
@@ -110,12 +121,12 @@ sub shoot_up{
 	if ($self->{_power} <= 0){
 		return 0;
 	}
-	print "Started Shooting...";
+	print "$self->{_name} started Shooting...";
 #print $self->{_my};
 #    for ( my $i = $self->{_my}; $i > 0; $i-- ) {
 #     draw_shot( $self->{_x}, $i );
 #  }
-	print "Tank stopped shooting...";
+	print "$self->{_name} stopped shooting...";
 }
 
 sub getX{
@@ -152,12 +163,14 @@ sub setShotPower{
 sub new
 {
 	my $class = shift;
+	my $name = shift;
 	my $self = {
 		_x => 100,
 		_angle => 0,
 		_my => 100,
 		_power => 100,
-		_shotPower => 1
+		_shotPower => 1,
+		_name => $name
 	};
 	bless $self, $class;
 	return $self;
