@@ -19,20 +19,25 @@ sub getY() {
 sub shoot() {
 	print "Shooting!";
 	my ($self, $angle) = @_;
-	$self->{_x} += sin($angle);
-	$self->{_y} += cos($angle);
+	$angle = deg2rad($angle);
+	print "The angle is $angle";
+	print sin($angle);
+	print cos($angle);
+	$self->{_x} -= sin($angle);
+	$self->{_y} -= cos($angle);
 	print "Shot at ($self->{_x}, $self->{_y})";
 }
 
 sub new{
 	my $class = shift;
-	my ($x, $y) = shift;
+	my $x = shift;
+	my $y = shift;
 	my $self = {
 		_x => $x,
 		_y => $y
 	};
 	bless $self, $class;
-	print "Shot Created";
+	print "Shot Created at ($x, $y)";
 	return $self;
 }
 1;

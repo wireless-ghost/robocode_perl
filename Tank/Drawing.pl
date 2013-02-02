@@ -149,29 +149,28 @@ sub shoot_up {
 #$    for ( my $i = $tank1->getY(); $i > 0; $i-- ) {
 #      draw_shot( $tank1->getX(), $i );
 #    }
+	draw_shot( $tank1->getShotX(), $tank1->getShotY() );
 	print "Tank stopped shooting...";
 }
 
 sub draw_shot {
-#    my $tank1->getX() = shift;
-#    my $tank1->getY() = shift;#
+	my $x = shift;
+	my $y = shift;
 
-#    $canvas->delete( 'shot' );
-#
-#    print $tank1->getX(), $tank1->getY();
-#
-#    my $new_shot = $mw->Photo;
-#    $new_shot->copy( $shot_image );
-#    
-#    $canvas->createImage
-#    (
-#      $tank1->getX(), 
-#      $tank1->getY(), 
-#      -image => $new_shot,
-#      -tags => [ 'shot' ]
-#    );#
-#
-#    $canvas->update;
+    	$canvas->delete( 'shot' );
+    
+	my $new_shot = $mw->Photo;
+    	$new_shot->copy( $shot_image );
+    
+   	 $canvas->createImage
+    	(
+      		$x, 
+      		$y, 
+		-image => $new_shot,
+		-tags => [ 'shot' ]
+    	);
+
+    $canvas->update;
 }
 
 MAIN: {

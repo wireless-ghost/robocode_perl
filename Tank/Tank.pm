@@ -16,10 +16,10 @@ sub checkPower {
 
 sub move_up {
 	my ($self) = @_;
-	if ($self->checkPower() != 1 || $self->{_my} <= 0 ){
+	if ($self->checkPower() != 1 || $self->{_y} <= 0 ){
 		return 0;
 	}
-	$self->{_my}--;
+	$self->{_y}--;
 	$self->{_angle} = 0;
 	$self->{_power}--;
 }
@@ -29,7 +29,7 @@ sub move_down {
 	if ($self->checkPower() != 1){
 		return 0;
 	}
-	$self->{_my} = $self->{_my} + 1;
+	$self->{_y} = $self->{_y} + 1;
 	$self->{_angle} = 180;
 	$self->{_power}--;
 }
@@ -58,20 +58,20 @@ sub move_forward {
 	my ( $self ) = @_;
 	print "$self->{_name} is moving forward...";
 
-	if ( $self->{_my} >= 488 || $self->{_my} <= 24 #bottom/ top of the screen
+	if ( $self->{_y} >= 488 || $self->{_y} <= 24 #bottom/ top of the screen
 		|| $self->{_x} <= 24 || $self->{_x} >= 488 #left/ right of the screen
 		|| $self->{_power} <= 0 ) {
 		return 0;	
 	}
 
 	if ( $self->{_angle} == 360 or $self->{_angle} == 0) {
-		$self->{_my} -= 1;
+		$self->{_y} -= 1;
 	}
 	elsif ( $self->{_angle} == 270 or $self->{_angle} == -90 ) {
 		$self->{_x} += 1;
 	}
 	elsif ( $self->{_angle} == 180 or $self->{_angle} == -180 ) {
-		$self->{_my} += 1;
+		$self->{_y} += 1;
 	}
 	elsif ( $self->{_angle} == 90 or $self->{_angle} == -270) {
 		$self->{_x} -= 1;
@@ -79,22 +79,22 @@ sub move_forward {
 	elsif ( ( $self->{_angle} >= 271 && $self->{_angle} <= 359)
 		|| ($self->{_angle} >= -179 && $self->{_angle} <= -91  ) ) {#first quadrant
 		$self->{_x} += 1;
-		$self->{_my} += 1;
+		$self->{_y} += 1;
 	}
 	elsif ( ( $self->{_angle} >= 181 && $self->{_angle} <= 269)
 		|| ( $self->{_angle} >= -89 && $self->{_angle} <= -1 ) ) { #second quadrant
 		$self->{_x} += 1;
-		$self->{_my} -= 1;
+		$self->{_y} -= 1;
 	}
 	elsif ( ( $self->{_angle} >= 91 && $self->{_angle} <= 179 )
 		|| ( $self->{_angle} => -359 && $self->{_angle} <= -271 ) ) { #third quadrant
 		$self->{_x} -= 1;
-		$self->{_my} -= 1;
+		$self->{_y} -= 1;
 	}
 	elsif ( ( $self->{_angle} >= 1 && $self->{_angle} <= 89 ) 
 		|| ( $self->{_anlge} >= -269 && $self->{_angle} <= -181 )) { #forth quadrant
 		$self->{_x} -= 1;
-		$self->{_my} += 1;
+		$self->{_y} += 1;
 	}
 
 	$self->{_power}--;
@@ -124,8 +124,8 @@ sub shoot_up{
 	}
 	print "$self->{_name} started Shooting...";
 	$self->{_shot}->shoot($self->{_angle});
-#print $self->{_my};
-#    for ( my $i = $self->{_my}; $i > 0; $i-- ) {
+#print $self->{_y};
+#    for ( my $i = $self->{_y}; $i > 0; $i-- ) {
 #     draw_shot( $self->{_x}, $i );
 #  }
 	print "$self->{_name} stopped shooting...";
@@ -148,7 +148,7 @@ sub getX{
 
 sub getY{
 	my( $self ) = @_;
-	return $self->{_my};
+	return $self->{_y};
 }
 
 sub getAngle{
@@ -180,7 +180,7 @@ sub new
 	my $self = {
 		_x => 100,
 		_angle => 0,
-		_my => 100,
+		_y => 100,
 		_power => 100,
 		_shotPower => 1,
 		_name => $name,

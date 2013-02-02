@@ -1,5 +1,6 @@
 #!/usr/local/bin/perl -w
 use Math::Trig;
+use Shot;
 
 package Tank;
 
@@ -122,11 +123,22 @@ sub shoot_up{
 		return 0;
 	}
 	print "$self->{_name} started Shooting...";
+	$self->{_shot}->shoot($self->{_angle});
 #print $self->{_my};
 #    for ( my $i = $self->{_my}; $i > 0; $i-- ) {
 #     draw_shot( $self->{_x}, $i );
 #  }
 	print "$self->{_name} stopped shooting...";
+}
+
+sub getShotX{
+	my ($self) = @_;
+	return $self->{_shot}->getX();
+}
+
+sub getShotY{
+	my ($self) = @_;
+	return $self->{_shot}->getY();
 }
 
 sub getX{
@@ -164,13 +176,15 @@ sub new
 {
 	my $class = shift;
 	my $name = shift;
+	my $shot = new Shot(100, 125);
 	my $self = {
 		_x => 100,
 		_angle => 0,
 		_my => 100,
 		_power => 100,
 		_shotPower => 1,
-		_name => $name
+		_name => $name,
+		_shot => $shot
 	};
 	bless $self, $class;
 	return $self;
