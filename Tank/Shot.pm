@@ -4,19 +4,19 @@ use Math::Trig;
 
 $\ = "\n";
 
-sub getX() {
+sub getX {
 	my ($self) = @_;
 	print "shot x is: $self->{_x}";
 	return $self->{_x};
 }
 
-sub getY() {
+sub getY {
 	my ($self) = @_;
 	print "shot y is: $self->{_y}";
 	return $self->{_y};
 }
 
-sub shoot() {
+sub shoot {
 	print "Shooting!";
 	my ($self, $angle) = @_;
 	$angle = deg2rad($angle);

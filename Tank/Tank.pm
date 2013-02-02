@@ -1,8 +1,8 @@
 #!/usr/local/bin/perl -w
+package Tank;
+
 use Math::Trig;
 use Shot;
-
-package Tank;
 
 $\ = "\n";
 
@@ -101,8 +101,25 @@ sub move_forward {
 }
 
 sub checkForEnemy {
-#	my ( $self, $enemyX, $enemyY ) = @_;
-#	if ( tan ( ( )
+	my ($self, $e_x, $e_y) = @_;
+	my $x = $self->{_x};
+	my $y = $self->{_y};
+	my $sin = sin($self->{_angle});
+	my $cos = cos($self->{_angle});
+	
+	while ( $e_x != $x 
+		&& $e_y != $y
+		&& $x > 0
+		&& $x <= 512
+		&& $y > 0
+		&& $y <= 512 ) {
+		$x -= $sin;
+		$y -= $cos;
+	}
+	
+	if ($e_x == $x || $e_y == $y) {
+		print "ENEMY SPOTTED!";
+	}	
 }
 
 sub turnLeft {

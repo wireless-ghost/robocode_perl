@@ -173,6 +173,10 @@ sub draw_shot {
     $canvas->update;
 }
 
+sub checkForEnemy {
+	$tank1->checkForEnemy(100, 90);
+}
+
 MAIN: {
 	      $tank1 = new Tank( "Millenium Falcon" );
 	      $mw = MainWindow->new;
@@ -190,8 +194,9 @@ MAIN: {
 	      $mw->bind( "<d>"				=> \&move_right );
 	      $mw->bind( "<a>"				=> \&move_left );
 	      $mw->bind( "<r>"         			=> \&scan );
-	      $mw->bind( "<c>"				=> \&move_forward);
+	      $mw->bind( "<c>"				=> \&move_forward );
 	      $mw->bind( "<f>"         			=> \&shoot_up );
+	      $mw->bind( "<e>"				=> \&checkForEnemy );
 
 	      $kp = 0; #key pressed
 
