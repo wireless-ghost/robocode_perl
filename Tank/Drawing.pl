@@ -144,6 +144,7 @@ sub turnRight {
 
 sub shoot_up {
 	print "Started Shooting...";
+	$tank1->shoot_up();
 #    print $tank1->getY();
 #$    for ( my $i = $tank1->getY(); $i > 0; $i-- ) {
 #      draw_shot( $tank1->getX(), $i );
