@@ -1,6 +1,6 @@
-use Math::Trig;
-
 package Shot;
+
+use Math::Trig;
 
 $\ = "\n";
 
