@@ -5,26 +5,26 @@ use Math::Trig;
 $\ = "\n";
 
 sub getX {
-	my ($self) = @_;
+	my ( $self ) = @_;
 	print "shot x is: $self->{_x}";
 	return $self->{_x};
 }
 
 sub getY {
-	my ($self) = @_;
+	my ( $self ) = @_;
 	print "shot y is: $self->{_y}";
 	return $self->{_y};
 }
 
 sub shoot {
 	print "Shooting!";
-	my ($self, $angle) = @_;
-	$angle = deg2rad($angle);
+	my ( $self, $angle, $mul ) = @_;
+	$angle = deg2rad( $angle );
 	print "The angle is $angle";
-	print sin($angle);
-	print cos($angle);
-	$self->{_x} -= sin($angle);
-	$self->{_y} -= cos($angle);
+	print sin( $angle );
+	print cos( $angle );
+	$self->{_x} -= ( sin( $angle ) ) * $mul;
+	$self->{_y} -= ( cos($angle) ) * $mul;
 	print "Shot at ($self->{_x}, $self->{_y})";
 }
 

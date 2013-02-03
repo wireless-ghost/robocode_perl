@@ -7,6 +7,7 @@ use Tk::Compound;
 use Tk::PhotoRotate;
 use subs qw/rotate/;
 use Tank;
+use AnyEvent;
 
 $\ = "\n";
 
@@ -127,7 +128,7 @@ sub draw_tank {
 		  -image => $new_image, 
 		  -tags => ['tank1'] );
 
-	$canvas->createLine($my_x, $my_y, $my_x, 0, -tags=>[ 'line' ], -fill=> blue);  
+#	$canvas->createLine($my_x, $my_y, $my_x, 0, -tags=>[ 'line' ], -fill=> "blue");  
 
 	$canvas->update;
 }
@@ -144,12 +145,19 @@ sub turnRight {
 
 sub shoot_up {
 	print "Started Shooting...";
-	$tank1->shoot_up();
-#    print $tank1->getY();
-#$    for ( my $i = $tank1->getY(); $i > 0; $i-- ) {
-#      draw_shot( $tank1->getX(), $i );
-#    }
-	draw_shot( $tank1->getShotX(), $tank1->getShotY() );
+	
+	$tank1->shoot();
+	my $w; #it is defined here because we want to use w in the following code
+	$w = AnyEvent->timer ( after => 0, interval => 1, cb => sub {
+					if ( $tank1->getShotX() >= 512 || $tank1->getShotX() <= 0 
+						|| $tank1->getShotY() >= 512 || $tank1->getShotY() <= 0 ) {
+						undef $w;
+					}
+					else {
+						$tank1->moveShot();
+						draw_shot( $tank1->getShotX(), $tank1->getShotY() );
+					}
+				} );
 	print "Tank stopped shooting...";
 }
 

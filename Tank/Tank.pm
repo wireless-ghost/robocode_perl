@@ -55,7 +55,7 @@ sub move_left {
 }
 
 sub move_forward {
-	my ( $self ) = @_;
+my ( $self ) = @_;
 	print "$self->{_name} is moving forward...";
 
 	if ( $self->{_y} >= 488 || $self->{_y} <= 24 #bottom/ top of the screen
@@ -117,44 +117,47 @@ sub checkForEnemy {
 		$y -= $cos;
 	}
 	
-	if ($e_x == $x || $e_y == $y) {
+	if ( $e_x == $x || $e_y == $y ) {
 		print "ENEMY SPOTTED!";
 	}	
 }
 
 sub turnLeft {
-	my ($self, $turning_angle) = @_;
+	my ( $self, $turning_angle ) = @_;
 
 	$self->{_angle} += $turning_angle;
 }
 
 sub turnRight {
-	my ($self, $turning_angle) = @_;
+	my ( $self, $turning_angle ) = @_;
 
 	$self->{_angle} -= $turning_angle;
 }
 
-sub shoot_up{
-	my ($self) = @_;
-	if ($self->{_power} <= 0){
+sub shoot{
+	my ( $self ) = @_;
+	if ( $self->{_power} <= 0 ){
 		return 0;
 	}
 	print "$self->{_name} started Shooting...";
-	$self->{_shot}->shoot($self->{_angle});
-#print $self->{_y};
-#    for ( my $i = $self->{_y}; $i > 0; $i-- ) {
-#     draw_shot( $self->{_x}, $i );
-#  }
+	$self->{_shot}->shoot( $self->{_angle}, 1 );
+	$self->{_power} -= $self->{_shotPower};
+	
 	print "$self->{_name} stopped shooting...";
 }
 
+sub moveShot{
+	my ( $self ) = @_;
+	$self->{_shot}->shoot( $self->{_angle}, 10 );
+}
+
 sub getShotX{
-	my ($self) = @_;
+	my ( $self ) = @_;
 	return $self->{_shot}->getX();
 }
 
 sub getShotY{
-	my ($self) = @_;
+	my ( $self ) = @_;
 	return $self->{_shot}->getY();
 }
 
@@ -169,23 +172,23 @@ sub getY{
 }
 
 sub getAngle{
-	my ($self) = @_;
+	my ( $self ) = @_;
 	return $self->{_angle};		
 }
 
 sub getPower{
-	my ($self) = @_;
+	my ( $self ) = @_;
 	return $self->{_power};
 }
 
 sub getShotPower{
-	my ($self) = @_;
+	my ( $self ) = @_;
 	return $self->{_shotPower};
 }
 
 sub setShotPower{
-	my ($self, $shotPower) = @_;
-	$self->{_shotPower} = $shotPower if defined($shotPower);
+	my ( $self, $shotPower ) = @_;
+	$self->{_shotPower} = $shotPower if defined( $shotPower );
 	return $self->{_shotPower};
 }
 
@@ -193,7 +196,7 @@ sub new
 {
 	my $class = shift;
 	my $name = shift;
-	my $shot = new Shot(100, 125);
+	my $shot = new Shot( 100, 125 );
 	my $self = {
 		_x => 100,
 		_angle => 0,
