@@ -23,7 +23,7 @@ Installing:
 			- cpan> install Tk
 	
 	- Installing Perl::Tk::PhotoRotate
-		- In the current dir you will find a folder Tk-PhotoRotate-1.1/
+		- In lib directory you will find a folder Tk-PhotoRotate-1.1/
 		- When inside Tk-PhotoRotate-1.1:
 			- perl Makefile.PL
 			- make
@@ -31,7 +31,7 @@ Installing:
 			- make install
 	
 	- Installing Perl::AnyEvent
-		- In the current dir you will find a folder AnyEvent-7.04/
+		- In lib directory you will find a folder AnyEvent-7.04/
 			- perl Makefile.PL
 			- make
 			- make test
