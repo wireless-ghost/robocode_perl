@@ -6,12 +6,26 @@ use Shot;
 
 $\ = "\n";
 
+sub step {
+  print "Step invoced";
+}
+
+sub get_name{
+  my ($self) = @_;
+  return $self->{_name};
+}
+
 sub checkPower {
 	my ($self) = @_;
 	if ($self->{_power} <= 0){
 		return 0;
 	}
 	return 1;
+}
+
+sub get_color {
+  my ($self) = @_;
+  return $self->{_color};
 }
 
 sub move_up {
@@ -55,7 +69,7 @@ sub move_left {
 }
 
 sub move_forward {
-my ( $self ) = @_;
+  my ( $self, $distance ) = @_;
 	print "$self->{_name} is moving forward...";
 
 	if ( $self->{_y} >= 488 || $self->{_y} <= 24 #bottom/ top of the screen
@@ -65,36 +79,36 @@ my ( $self ) = @_;
 	}
 
 	if ( $self->{_angle} == 360 or $self->{_angle} == 0) {
-		$self->{_y} -= 1;
+		$self->{_y} -= $distance;
 	}
 	elsif ( $self->{_angle} == 270 or $self->{_angle} == -90 ) {
-		$self->{_x} += 1;
+		$self->{_x} += $distance;
 	}
 	elsif ( $self->{_angle} == 180 or $self->{_angle} == -180 ) {
-		$self->{_y} += 1;
+		$self->{_y} += $distance;
 	}
 	elsif ( $self->{_angle} == 90 or $self->{_angle} == -270) {
-		$self->{_x} -= 1;
+		$self->{_x} -= $distance;
 	}
 	elsif ( ( $self->{_angle} >= 271 && $self->{_angle} <= 359)
 		|| ($self->{_angle} >= -179 && $self->{_angle} <= -91  ) ) {#first quadrant
-		$self->{_x} += 1;
-		$self->{_y} += 1;
+		$self->{_x} += $distance;
+		$self->{_y} += $distance;
 	}
 	elsif ( ( $self->{_angle} >= 181 && $self->{_angle} <= 269)
 		|| ( $self->{_angle} >= -89 && $self->{_angle} <= -1 ) ) { #second quadrant
-		$self->{_x} += 1;
-		$self->{_y} -= 1;
+		$self->{_x} += $distance;
+		$self->{_y} -= $distance;
 	}
 	elsif ( ( $self->{_angle} >= 91 && $self->{_angle} <= 179 )
 		|| ( $self->{_angle} => -359 && $self->{_angle} <= -271 ) ) { #third quadrant
-		$self->{_x} -= 1;
-		$self->{_y} -= 1;
+		$self->{_x} -= $distance;
+		$self->{_y} -= $distance;
 	}
 	elsif ( ( $self->{_angle} >= 1 && $self->{_angle} <= 89 ) 
 		|| ( $self->{_anlge} >= -269 && $self->{_angle} <= -181 )) { #forth quadrant
-		$self->{_x} -= 1;
-		$self->{_y} += 1;
+		$self->{_x} -= $distance;
+		$self->{_y} += $distance;
 	}
 
 	$self->{_power}--;
@@ -130,8 +144,10 @@ sub turnLeft {
 
 sub turnRight {
 	my ( $self, $turning_angle ) = @_;
-
 	$self->{_angle} -= $turning_angle;
+  if ( $self->{_angle} < -360 || $self->{_angle} > 360){
+  $self->{_angle} = $self->{_angle} % 360; 
+  }
 }
 
 sub shoot{
@@ -204,7 +220,8 @@ sub new
 		_power => 100,
 		_shotPower => 1,
 		_name => $name,
-		_shot => $shot
+		_shot => $shot,
+    _color => 'red'
 	};
 	bless $self, $class;
 	return $self;

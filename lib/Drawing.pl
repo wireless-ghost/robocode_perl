@@ -1,5 +1,5 @@
 #!/usr/local/bin/perl -w
-
+use List::Util qw(shuffle);
 use Time::HiRes;
 use Tk;
 use Tk::widgets qw/JPEG PNG/;
@@ -11,6 +11,8 @@ use lib "../robots";
 use AnyEvent;
 
 $\ = "\n";
+
+my $tank_colors;
 
 my $mw;
 
@@ -109,15 +111,15 @@ sub move_tank {
 }
 
 sub draw_tank {
-	my $my_angle = shift;
-	my $my_x = shift;
-	my $my_y = shift;
+	my $tank = shift;
+  my $my_angle = $tank->getAngle();
+	my $my_x = $tank->getX();
+	my $my_y = $tank->getY();
 
-	$canvas->delete( 'tank1' );
-	$canvas->delete( 'line' );
+	$canvas->delete( $tank->get_name() );
 
 	my $new_image = $mw->Photo;
-	$new_image->copy( $tank1_image );
+	$new_image->copy( $tank_colors->{$tank->get_color()});
 
 	print "angle: $my_angle , x: $my_x , y: $my_y";
 
@@ -127,7 +129,7 @@ sub draw_tank {
 		( $my_x,
 		  $my_y,
 		  -image => $new_image, 
-		  -tags => ['tank1'] );
+		  -tags => [$tank->get_name()] );
 
 #	$canvas->createLine($my_x, $my_y, $my_x, 0, -tags=>[ 'line' ], -fill=> "blue");  
 
@@ -182,32 +184,23 @@ sub draw_shot {
     $canvas->update;
 }
 
-sub checkForEnemy {
-	$tank1->checkForEnemy(100, 90);
-}
-
 MAIN: {
+       my @tanks = (); 
 	      $mw = MainWindow->new;
-
-	      $tank_image = $mw->Photo( -file => "images/tank.png" );
-	      $shot_image  = $mw->Photo( -file => "images/shot.png" );
+        $tank_colors = {
+          'blue' => $mw->Photo( -file => "images/tank_blue.png" ),
+          'red' => $mw->Photo( -file => "images/tank_red.png" ),
+          'green' => $mw->Photo( -file => "images/tank_green.png" ),
+        };
 
 	      $canvas = $mw->Canvas( -width => 512, -height => 512, -background => 'black' ) -> pack;
 
 	      $mw->protocol( 'WM_DELETE_WINDOW', \&exit_app );
 	      $mw->bind( "<q>"         			=> \&exit_app );
 	      $mw->bind( "<Control-c>" 			=> \&exit_app );
-	      $mw->bind( "<w>"				=> \&move_up );
-	      $mw->bind( "<s>"				=> \&move_down );
-	      $mw->bind( "<d>"				=> \&move_right );
-	      $mw->bind( "<a>"				=> \&move_left );
-	      $mw->bind( "<r>"         			=> \&scan );
-	      $mw->bind( "<c>"				=> \&move_forward );
-	      $mw->bind( "<f>"         			=> \&shoot_up );
-	      $mw->bind( "<e>"				=> \&checkForEnemy );
-
 	      $kp = 0; #key pressed
-        
+	      $shot_image  = $mw->Photo( -file => "images/shot.png" );
+
         my $robots_dir = '../robots';
         opendir (DIR, $robots_dir) or die $!;
 
@@ -215,17 +208,30 @@ MAIN: {
           next if ($file !~ m/(.*)\.pm/); 
           require $file;
           my $tank = new $1("Dom dom dom");
-#	      $tank = new Tank( "Millenium Falcon" );
-	      $canvas->createImage( $tank->getX(),$tank->getY(),
-				      -image => $tank_image,
+	        $canvas->createImage( $tank->getX(),$tank->getY(),
+				      -image => $tank_colors->{$tank->get_color()},
 				      -tags => [$1] );
 	      
-	      $canvas->createImage( $tank->getX(),
+	        $canvas->createImage( $tank->getX(),
 			      $tank->getY() + 1,
 			      -image => $shot_image,
 			      -tags => ['shot'] );
-          print "$1"; 
+          push(@tanks, $tank);
         }
 
+        shuffle @tanks;
+        while(1){
+          foreach my $cur_tank ( @tanks ){
+            #           my $w;
+#            $w = AnyEvent->timer ( after => 1, interval => 1, cb => sub {
+                $cur_tank->step();
+                draw_tank($cur_tank);
+                #               undef $w;
+#              });
+#            undef $w;
+#            $_->step(); 
+#            draw_tank($cur_tank);
+          } 
+        }
 	      MainLoop;
-      }
+}
