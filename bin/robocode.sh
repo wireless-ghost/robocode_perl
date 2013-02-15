@@ -1,2 +1,2 @@
 #!/bin/bash
-perl ./Drawing.pl
+perl ../lib/Drawing.pl

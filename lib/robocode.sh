@@ -1,2 +1,2 @@
-#/usr/shell
+#!/bin/bash
 perl ./Drawing.pl
