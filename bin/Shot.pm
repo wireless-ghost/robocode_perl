@@ -40,4 +40,3 @@ sub new{
 	print "Shot Created at ($x, $y)";
 	return $self;
 }
-1;

@@ -7,6 +7,7 @@ use Tk::Compound;
 use Tk::PhotoRotate;
 use subs qw/rotate/;
 use Tank;
+use lib "../robots";
 use AnyEvent;
 
 $\ = "\n";
@@ -186,10 +187,9 @@ sub checkForEnemy {
 }
 
 MAIN: {
-	      $tank1 = new Tank( "Millenium Falcon" );
 	      $mw = MainWindow->new;
 
-	      $tank1_image = $mw->Photo( -file => "images/tank.png" );
+	      $tank_image = $mw->Photo( -file => "images/tank.png" );
 	      $shot_image  = $mw->Photo( -file => "images/shot.png" );
 
 	      $canvas = $mw->Canvas( -width => 512, -height => 512, -background => 'black' ) -> pack;
@@ -207,15 +207,25 @@ MAIN: {
 	      $mw->bind( "<e>"				=> \&checkForEnemy );
 
 	      $kp = 0; #key pressed
+        
+        my $robots_dir = '../robots';
+        opendir (DIR, $robots_dir) or die $!;
 
-	      $canvas->createImage( $tank1->getX(),$tank1->getY(),
-				      -image => $tank1_image,
-				      -tags => ['tank1'] );
+        while (my $file = readdir(DIR)){
+          next if ($file !~ m/(.*)\.pm/); 
+          require $file;
+          my $tank = new $1("Dom dom dom");
+#	      $tank = new Tank( "Millenium Falcon" );
+	      $canvas->createImage( $tank->getX(),$tank->getY(),
+				      -image => $tank_image,
+				      -tags => [$1] );
 	      
-	      $canvas->createImage( $tank1->getX(),
-			      $tank1->getY() + 1,
+	      $canvas->createImage( $tank->getX(),
+			      $tank->getY() + 1,
 			      -image => $shot_image,
 			      -tags => ['shot'] );
+          print "$1"; 
+        }
 
 	      MainLoop;
       }
