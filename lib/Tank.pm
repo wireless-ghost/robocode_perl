@@ -247,11 +247,20 @@ sub enemy_spotted {
   $self->{_power} = 0;
 }
 
+sub tank_shooting{
+  my ( $self ) = @_;
+  return $self->{_isShooting};
+}
+
+sub set_shooting{ 
+  my ( $self, $state ) = @_;
+  $self->{_isShooting} = $state;
+}
+
 sub new
 {
   my $class = shift;
   my $name = shift;
-  my $shot = new Shot( 100, 125 );
   my $self = {
     _x => int(rand(460))+25,
     _y => int(rand(460))+25,
@@ -259,9 +268,12 @@ sub new
     _power => 1000,
     _shotPower => 1,
     _name => $name,
-    _shot => $shot,
-    _color => "blue"
+    #   _shot => $shot,
+    _color => "blue",
+    _isShooting => 0
   };
+  my $shot = new Shot( $self->{_x}, $self->{_y} + 23 );
+  $self->{_shot} = $shot;
   bless $self, $class;
   return $self;
 }

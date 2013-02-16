@@ -148,19 +148,20 @@ sub turnRight {
 
 sub shoot_up {
 	print "Started Shooting...";
-	
-	$tank1->shoot();
-	my $w; #it is defined here because we want to use w in the following code
-	$w = anyevent->timer ( after => 0, interval => 1, cb => sub {
-					if ( $tank1->getshotx() >= 512 || $tank1->getshotx() <= 0 
-						|| $tank1->getshoty() >= 512 || $tank1->getshoty() <= 0 ) {
-						undef $w;
+
+  my $tank1 = shift;
+
+	while (1){		
+  if ( $tank1->getShotX() >= 510 or $tank1->getShotX() <= 2 
+              or $tank1->getShotY() >= 510 or $tank1->getShotY() <= 2 ) {
+            last;
 					}
 					else {
-						$tank1->moveshot();
-						draw_shot( $tank1->getshotx(), $tank1->getshoty() );
+						$tank1->shoot();
+						draw_shot( $tank1->getShotX(), $tank1->getShotY() );
 					}
-				} );
+	}
+  $tank1->set_shooting(0);
 	print "Tank stopped shooting...";
 }
 
@@ -168,7 +169,7 @@ sub draw_shot {
 	my $x = shift;
 	my $y = shift;
 
-    	$canvas->delete( 'shot' );
+  $canvas->delete( 'shot' );
     
 	my $new_shot = $mw->Photo;
     	$new_shot->copy( $shot_image );
@@ -187,21 +188,14 @@ sub draw_shot {
 sub loop {
   my @tanks = @_;
   while(1){
-    foreach my $cur_tank ( @tanks ){
-      #   my $w;
-      my $counter = 0;
-      my $w = AnyEvent->timer ( after => 1, interval => 1, cb => sub {
-#		if ($counter == 2){
-#			undef $w;
-#		}
-          print "secunda madafakaaaaaaaaaaaa";
-          #               $counter++;
-        });
-      undef $w;
-      $cur_tank->step(); 
-      draw_tank($cur_tank);
-      if ( $cur_tank->check_enemies( @tanks ) == 1 ) {
-        $cur_tank->enemy_spotted();
+    foreach my $current_tank ( @tanks ){
+      $current_tank->step(); 
+      draw_tank($current_tank);
+      if ( $current_tank->check_enemies( @tanks ) == 1 ) {
+        $current_tank->enemy_spotted();
+      }
+      if ( $current_tank->tank_shooting == 1 ) {
+        shoot_up($current_tank);
       }
     } 
   }

@@ -6,15 +6,18 @@ package MilleniumFalcon;
 
  sub step{
    my $self = shift;
-   $self->set_color ( $color );
-   $self->turnRight(90);
-   $self->move_forward(10);
+   #$self->set_color ( $color );
+   #$self->turnRight(90);
+   #$self->move_forward(10);
+   $self->set_shooting(1);
+   $self->set_color( "red" ); 
  }
 
  sub enemy_spotted {
 	my $self = shift;
 	$color = "red";
 	$self->set_color( $color );
+  #$self->shoot();
 	print "I SAW HIM! GONNA BLOW HIS... YOu GOT THE POINT!";
  }
 
