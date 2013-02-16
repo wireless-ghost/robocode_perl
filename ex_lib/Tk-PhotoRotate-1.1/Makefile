@@ -23,9 +23,9 @@
 #     PM => { Tk/PhotoRotateSimple.pm=>q[$(INST_LIBDIR)/PhotoRotateSimple.pm], Tk/PhotoRotate.pm=>q[$(INST_LIBDIR)/PhotoRotate.pm] }
 #     PREREQ_PM => {  }
 #     TYPEMAPS => [q[/usr/lib/perl5/Tk/typemap]]
-#     VERSION => q[804.029]
+#     VERSION => q[804.03]
 #     VERSION_FROM => q[Tk/PhotoRotate.pm]
-#     XS_VERSION => q[804.029]
+#     XS_VERSION => q[804.03]
 #     clean => { FILES=>q[ *.bak] }
 #     dist => { COMPRESS=>q[gzip], SUFFIX=>q[gz] }
 #     macro => { TKDIR=>q[/usr/lib/perl5/Tk] }
@@ -46,13 +46,13 @@ DLSRC = dl_dlopen.xs
 EXE_EXT = 
 FULL_AR = /usr/bin/ar
 LD = cc
-LDDLFLAGS = -shared -O2 -g -L/usr/local/lib -fstack-protector
+LDDLFLAGS = -shared -L/usr/local/lib -fstack-protector
 LDFLAGS =  -fstack-protector -L/usr/local/lib
 LIBC = 
 LIB_EXT = .a
 OBJ_EXT = .o
 OSNAME = linux
-OSVERS = 2.6.24-31-server
+OSVERS = 3.2.0-23-generic
 RANLIB = :
 SITELIBEXP = /usr/local/share/perl/5.14.2
 SITEARCHEXP = /usr/local/lib/perl/5.14.2
@@ -71,7 +71,7 @@ VERSION = 1.1
 VERSION_MACRO = VERSION
 VERSION_SYM = 1_1
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 804.029
+XS_VERSION = 804.03
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -300,6 +300,7 @@ TKDIR = /usr/lib/perl5/Tk
 
 PASTHRU = LIBPERL_A="$(LIBPERL_A)"\
 	LINKTYPE="$(LINKTYPE)"\
+	LD="$(LD)"\
 	PREFIX="$(PREFIX)"\
 	PASTHRU_DEFINE="$(PASTHRU_DEFINE)"\
 	PASTHRU_INC="$(PASTHRU_INC)"
@@ -791,7 +792,7 @@ ppd :
 	$(NOECHO) $(ECHO) '    <ABSTRACT>Rotate Photos at arbitrary angles</ABSTRACT>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <AUTHOR>Steve Lidie (sol0@lehigh.edu)</AUTHOR>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <IMPLEMENTATION>' >> $(DISTNAME).ppd
-	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="i686-linux-gnu-thread-multi-64int-5.14" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="x86_64-linux-gnu-thread-multi-5.14" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <CODEBASE HREF="" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    </IMPLEMENTATION>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '</SOFTPKG>' >> $(DISTNAME).ppd

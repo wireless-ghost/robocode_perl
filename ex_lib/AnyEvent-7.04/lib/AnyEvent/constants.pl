@@ -1,4 +1,4 @@
-# automatically generated from constants.pl.PL for perl 5.014002 built for i686-linux-gnu-thread-multi-64int
+# automatically generated from constants.pl.PL for perl 5.014002 built for x86_64-linux-gnu-thread-multi
 package AnyEvent;
 sub CYGWIN(){0}
 sub WIN32(){0}

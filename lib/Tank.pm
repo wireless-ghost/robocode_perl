@@ -251,9 +251,9 @@ sub new
 	my $name = shift;
 	my $shot = new Shot( 100, 125 );
 	my $self = {
-		_x => 100,
+		_x => int(rand(460))+25,
+		_y => int(rand(460))+25,
 		_angle => 0,
-		_y => 100,
 		_power => 1000,
 		_shotPower => 1,
 		_name => $name,

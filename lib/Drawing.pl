@@ -185,26 +185,26 @@ sub draw_shot {
 }
 
 sub loop {
-	my @tanks = @_;
-	 while(1){
-          foreach my $cur_tank ( @tanks ){
-             #   my $w;
-		my $counter = 0;
-           my $w = AnyEvent->timer ( after => 1, interval => 1, cb => sub {
+  my @tanks = @_;
+  while(1){
+    foreach my $cur_tank ( @tanks ){
+      #   my $w;
+      my $counter = 0;
+      my $w = AnyEvent->timer ( after => 1, interval => 1, cb => sub {
 #		if ($counter == 2){
 #			undef $w;
 #		}
-		print "secunda madafakaaaaaaaaaaaa";
- #               $counter++;
-              });
-           undef $w;
-           $cur_tank->step(); 
-           draw_tank($cur_tank);
- 	   if ( $cur_tank->check_enemies( @tanks ) == 1 ) {
-			$cur_tank->enemy_spotted();
-		}
-          } 
-        }
+          print "secunda madafakaaaaaaaaaaaa";
+          #               $counter++;
+        });
+      undef $w;
+      $cur_tank->step(); 
+      draw_tank($cur_tank);
+      if ( $cur_tank->check_enemies( @tanks ) == 1 ) {
+        $cur_tank->enemy_spotted();
+      }
+    } 
+  }
 
 }
 
@@ -233,7 +233,6 @@ MAIN: {
           require $file;
           my $tank = new $1($1);
 
-#	  print "$tank->get_name() created...");
 	        $canvas->createImage( $tank->getX(),$tank->getY(),
 				      -image => $tank_colors->{$tank->get_color()},
 				      -tags => [$1] );
