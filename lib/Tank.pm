@@ -119,10 +119,26 @@ sub move_forward {
 	$self->{_power} -= $distance;
 }
 
+sub check_enemies {
+	print "Checking for enemies";
+	my ( $self, @tanks ) = @_;
+	foreach my $cur_tank ( @tanks ){
+		if ( $self->{_name} ne $cur_tank->get_name() ) {
+			if ( $self->checkForEnemy( $cur_tank->getX(), $cur_tank->getY() ) == 1 ) {
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+
 sub checkForEnemy {
 	my ($self, $e_x, $e_y) = @_;
 	my $x = $self->{_x};
 	my $y = $self->{_y};
+	
+	print "Checking enemy at ($x, $y)";
+	
 	my $sin = sin($self->{_angle});
 	my $cos = cos($self->{_angle});
 	
@@ -138,7 +154,9 @@ sub checkForEnemy {
 	
 	if ( $e_x == $x || $e_y == $y ) {
 		print "ENEMY SPOTTED!";
+		return 1;
 	}	
+	return 0;
 }
 
 sub turnLeft {
@@ -215,6 +233,16 @@ sub setShotPower{
 	my ( $self, $shotPower ) = @_;
 	$self->{_shotPower} = $shotPower if defined( $shotPower );
 	return $self->{_shotPower};
+}
+
+sub enemy_spotted {
+	my ( $self ) = @_;
+	#All tanks should exted this function.
+	#It declares what the tank should do when he spots an enemy.
+	print "Enemy Spotted";
+	print "Make your own function!";
+	print "Robot is suiciding!!!";
+	$self->{_power} = 0;
 }
 
 sub new

@@ -151,14 +151,14 @@ sub shoot_up {
 	
 	$tank1->shoot();
 	my $w; #it is defined here because we want to use w in the following code
-	$w = AnyEvent->timer ( after => 0, interval => 1, cb => sub {
-					if ( $tank1->getShotX() >= 512 || $tank1->getShotX() <= 0 
-						|| $tank1->getShotY() >= 512 || $tank1->getShotY() <= 0 ) {
+	$w = anyevent->timer ( after => 0, interval => 1, cb => sub {
+					if ( $tank1->getshotx() >= 512 || $tank1->getshotx() <= 0 
+						|| $tank1->getshoty() >= 512 || $tank1->getshoty() <= 0 ) {
 						undef $w;
 					}
 					else {
-						$tank1->moveShot();
-						draw_shot( $tank1->getShotX(), $tank1->getShotY() );
+						$tank1->moveshot();
+						draw_shot( $tank1->getshotx(), $tank1->getshoty() );
 					}
 				} );
 	print "Tank stopped shooting...";
@@ -182,6 +182,30 @@ sub draw_shot {
     	);
 
     $canvas->update;
+}
+
+sub loop {
+	my @tanks = @_;
+	 while(1){
+          foreach my $cur_tank ( @tanks ){
+             #   my $w;
+		my $counter = 0;
+           my $w = AnyEvent->timer ( after => 1, interval => 1, cb => sub {
+#		if ($counter == 2){
+#			undef $w;
+#		}
+		print "secunda madafakaaaaaaaaaaaa";
+ #               $counter++;
+              });
+           undef $w;
+           $cur_tank->step(); 
+           draw_tank($cur_tank);
+ 	   if ( $cur_tank->check_enemies( @tanks ) == 1 ) {
+			$cur_tank->enemy_spotted();
+		}
+          } 
+        }
+
 }
 
 MAIN: {
@@ -222,21 +246,6 @@ MAIN: {
         }
 
         shuffle @tanks;
-        while(1){
-		my $w;
-          foreach my $cur_tank ( @tanks ){
-                      # my $w;
-		my $counter = 0;
-            $w = AnyEvent->timer ( after => 0, interval => 1, cb => sub {
-		if ($counter == 0){
-			undef $w;
-		}
-                $counter++;
-              });
-            undef $w;
-           $cur_tank->step(); 
-           draw_tank($cur_tank);
-          } 
-        }
-	      MainLoop;
+	loop( @tanks );
+	MainLoop;
 }
