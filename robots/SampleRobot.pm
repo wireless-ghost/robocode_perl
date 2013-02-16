@@ -4,6 +4,11 @@ package SampleRobot;
 our @ISA = "Tank";
 
 sub step{
+  my $self = shift;
+
+  $self->x(50);
+  $self->y(50);
+
   #put your step logic here
 }
 

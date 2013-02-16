@@ -9,8 +9,10 @@ package MilleniumFalcon;
    #$self->set_color ( $color );
    #$self->turnRight(90);
    #$self->move_forward(10);
-   $self->shoot();
    $self->set_color( "red" ); 
+   $self->x(50);
+   $self->y(200);
+   $self->shoot();
  }
 
  sub enemy_spotted {

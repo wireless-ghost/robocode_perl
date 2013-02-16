@@ -131,8 +131,6 @@ sub draw_tank {
 		  -image => $new_image, 
 		  -tags => [$tank->get_name()] );
 
-#	$canvas->createLine($my_x, $my_y, $my_x, 0, -tags=>[ 'line' ], -fill=> "blue");  
-
 	$canvas->update;
 }
 
@@ -151,6 +149,8 @@ sub shoot_up {
 
   my $tank1 = shift;
 
+  my @tanks = shift;
+
 	while (1){		
   if ( $tank1->getShotX() >= 510 or $tank1->getShotX() <= 2 
               or $tank1->getShotY() >= 510 or $tank1->getShotY() <= 2 ) {
@@ -159,6 +159,28 @@ sub shoot_up {
 					else {
 						$tank1->shoot_it();
 						draw_shot( $tank1->getShotX(), $tank1->getShotY() );
+
+            my @del_indexes;
+
+            foreach my $current_tank (@tanks){
+              next if !defined($current_tank);
+              if ( $current_tank->get_name()
+                ne $tank1->get_name() ) {
+               if ( $current_tank->check_for_intersection( $tank1->getShotX(), $tank1->getShotY() ) == 1 ){
+                 $current_tank->recieve_hit( $tank1->getShotPower() );
+                  $tank1->bullseye();
+                  if( $current_tank->checkPower() == 1 ) {
+                    @del_indexes = reverse(grep { $tanks[$_] eq $current_tank->get_name() } 0..$#tanks);
+                    last;
+                  }
+               }
+              }
+            }
+        
+          foreach my $item (@del_indexes) {
+            splice ( @tanks, $item, 1 );
+          }
+
 					}
 	}
   $tank1->set_shooting(0);
@@ -194,8 +216,8 @@ sub loop {
       if ( $current_tank->check_enemies( @tanks ) == 1 ) {
         $current_tank->enemy_spotted();
       }
-      if ( $current_tank->tank_shooting == 1 ) {
-        shoot_up($current_tank);
+      if ( $current_tank->tank_shooting() == 1 ) {
+        shoot_up($current_tank, @tanks);
       }
     } 
   }

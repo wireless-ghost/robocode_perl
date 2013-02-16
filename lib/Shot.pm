@@ -16,6 +16,20 @@ sub getY {
 	return $self->{_y};
 }
 
+sub set_x {
+  my $self = shift;
+  my $x = shift;
+
+  $self->{_x} = $x;
+}
+
+sub set_y {
+  my $self = shift;
+  my $y = shift;
+
+  $self->{_y} = $y;
+}
+
 sub shoot {
 	print "Shooting!";
 	my ( $self, $angle, $mul ) = @_;

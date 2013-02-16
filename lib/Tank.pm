@@ -118,6 +118,9 @@ sub move_forward {
     $self->{_y} += $distance;
   }
 
+  $self->{_shot}->set_x( $self->{_x} );
+  $self->{_shot}->set_y( $self->{_y} );
+
   $self->{_power} -= $distance;
 }
 
@@ -187,7 +190,6 @@ sub shoot_it{
   $self->{_isShooting} = 1;
   print "$self->{_name} started Shooting...";
   $self->{_shot}->shoot( $self->{_angle}, 1 );
-  $self->{_power} -= $self->{_shotPower};
 
   print "$self->{_name} stopped shooting...";
 }
@@ -251,11 +253,48 @@ sub tank_shooting{
 sub shoot{ 
   my ( $self ) = @_;
   $self->{_isShooting} = 1;
+  $self->{_power} -= $self->{_shotPower};
 }
 
 sub set_shooting{
   my ( $self, $state ) = @_;
   $self->{_isShooting} = $state;
+}
+
+sub check_for_intersection {
+  my ( $self, $x, $y ) = @_;
+  print "intersec in $x, $y";
+  if ( ( $self->{_x} + 24 >= $x and
+      $self->{_x} - 24 <= $x ) or
+      ( $self->{_y} + 24 >= $y and
+        $self->{_y} - 24 <= $y ) ) {
+        return 1;
+      }
+      return 0;
+}
+
+sub recieve_hit {
+  my $self = shift;
+  my $damage = shift;
+#:my ( $self, $damag ) = @_;
+  $self->{_power} -= $damage;
+}
+
+sub bullseye {
+  my $self = shift;;
+  $self->{_power} += $self->{_shotPower};
+}
+
+sub x{
+  my ( $self, $x ) = @_;
+  $self->{_x} = $x;
+  $self->{_shot}->set_x( $x );
+}
+
+sub y{
+  my( $self, $y ) = @_;
+  $self->{_y} = $y;
+  $self->{_shot}->set_y( $y );
 }
 
 sub new
@@ -267,7 +306,7 @@ sub new
     _y => int(rand(460))+25,
     _angle => 0,
     _power => 1000,
-    _shotPower => 1,
+    _shotPower => 10,
     _name => $name,
     #   _shot => $shot,
     _color => "blue",
