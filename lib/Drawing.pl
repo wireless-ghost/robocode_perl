@@ -207,7 +207,9 @@ MAIN: {
         while (my $file = readdir(DIR)){
           next if ($file !~ m/(.*)\.pm/); 
           require $file;
-          my $tank = new $1("Dom dom dom");
+          my $tank = new $1($1);
+
+#	  print "$tank->get_name() created...");
 	        $canvas->createImage( $tank->getX(),$tank->getY(),
 				      -image => $tank_colors->{$tank->get_color()},
 				      -tags => [$1] );
@@ -221,16 +223,19 @@ MAIN: {
 
         shuffle @tanks;
         while(1){
+		my $w;
           foreach my $cur_tank ( @tanks ){
-            #           my $w;
-#            $w = AnyEvent->timer ( after => 1, interval => 1, cb => sub {
-                $cur_tank->step();
-                draw_tank($cur_tank);
-                #               undef $w;
-#              });
-#            undef $w;
-#            $_->step(); 
-#            draw_tank($cur_tank);
+                      # my $w;
+		my $counter = 0;
+            $w = AnyEvent->timer ( after => 0, interval => 1, cb => sub {
+		if ($counter == 0){
+			undef $w;
+		}
+                $counter++;
+              });
+            undef $w;
+           $cur_tank->step(); 
+           draw_tank($cur_tank);
           } 
         }
 	      MainLoop;

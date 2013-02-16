@@ -28,6 +28,11 @@ sub get_color {
   return $self->{_color};
 }
 
+sub set_color {
+  my ($self, $color) = @_;
+  $self->{_color} = $color if defined $color;
+}
+
 sub move_up {
 	my ($self) = @_;
 	if ($self->checkPower() != 1 || $self->{_y} <= 0 ){
@@ -111,7 +116,7 @@ sub move_forward {
 		$self->{_y} += $distance;
 	}
 
-	$self->{_power}--;
+	$self->{_power} -= $distance;
 }
 
 sub checkForEnemy {
@@ -144,6 +149,10 @@ sub turnLeft {
 
 sub turnRight {
 	my ( $self, $turning_angle ) = @_;
+	if ( $self->{_power} <= 0 ) {
+		print "$self->{_name} is out of power!!!";
+		return 0;
+	}
 	$self->{_angle} -= $turning_angle;
   if ( $self->{_angle} < -360 || $self->{_angle} > 360){
   $self->{_angle} = $self->{_angle} % 360; 
@@ -217,11 +226,11 @@ sub new
 		_x => 100,
 		_angle => 0,
 		_y => 100,
-		_power => 100,
+		_power => 1000,
 		_shotPower => 1,
 		_name => $name,
 		_shot => $shot,
-    _color => 'red'
+		_color => "blue"
 	};
 	bless $self, $class;
 	return $self;
