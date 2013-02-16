@@ -54,7 +54,7 @@ Each robot should include as as a parant Tank package which is part of the roboc
 functionallity for your robot. To do so in each robot you should include the following line:
      our @ISA = 'Tank';
 Each robot should also implement two metods - `step()` and `enemy_spoted()`.
-`step()` is invoked on each step of the game and `enemy_spoted()' whenever an enemy tank is in range
+`step()` is invoked on each step of the game and `enemy_spoted()` whenever an enemy tank is in range
 A scaffold for robot can be found in `robots/SamplaRobot.pm`.
 
 In your code you can use: 
