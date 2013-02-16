@@ -179,21 +179,17 @@ sub turnRight {
   }
 }
 
-sub shoot{
+sub shoot_it{
   my ( $self ) = @_;
   if ( $self->{_power} <= 0 ){
     return 0;
   }
+  $self->{_isShooting} = 1;
   print "$self->{_name} started Shooting...";
   $self->{_shot}->shoot( $self->{_angle}, 1 );
   $self->{_power} -= $self->{_shotPower};
 
   print "$self->{_name} stopped shooting...";
-}
-
-sub moveShot{
-  my ( $self ) = @_;
-  $self->{_shot}->shoot( $self->{_angle}, 10 );
 }
 
 sub getShotX{
@@ -252,7 +248,12 @@ sub tank_shooting{
   return $self->{_isShooting};
 }
 
-sub set_shooting{ 
+sub shoot{ 
+  my ( $self ) = @_;
+  $self->{_isShooting} = 1;
+}
+
+sub set_shooting{
   my ( $self, $state ) = @_;
   $self->{_isShooting} = $state;
 }

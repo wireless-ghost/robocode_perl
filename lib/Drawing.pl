@@ -157,7 +157,7 @@ sub shoot_up {
             last;
 					}
 					else {
-						$tank1->shoot();
+						$tank1->shoot_it();
 						draw_shot( $tank1->getShotX(), $tank1->getShotY() );
 					}
 	}

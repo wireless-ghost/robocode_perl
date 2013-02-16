@@ -9,7 +9,7 @@ package MilleniumFalcon;
    #$self->set_color ( $color );
    #$self->turnRight(90);
    #$self->move_forward(10);
-   $self->set_shooting(1);
+   $self->shoot();
    $self->set_color( "red" ); 
  }
 
